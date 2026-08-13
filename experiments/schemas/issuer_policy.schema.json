@@ -1,0 +1,108 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://minmandate.local/schemas/issuer-policy-v1.json",
+  "type": "object",
+  "required": ["schema_version", "status", "scheme", "protocol_version", "wire_version", "curve", "epoch", "assignment", "routine_view", "material", "freeze_gate"],
+  "properties": {
+    "schema_version": {"const": "minmandate-issuer-policy-v1"},
+    "status": {"enum": ["awaiting_rust_generator", "generated_and_frozen"]},
+    "scheme": {"const": "ihbbs1-bbs-bls12381-v1"},
+    "protocol_version": {"const": "minmandate-v3"},
+    "wire_version": {"const": "minmandate-rs-jsonl-v3"},
+    "curve": {"const": "BLS12-381"},
+    "epoch": {
+      "type": "object",
+      "required": ["id", "sequence", "policy_size", "metadata_class", "immutable_for_formal_run"],
+      "properties": {
+        "id": {"const": "canonical-epoch-2026q3-v1"},
+        "sequence": {"type": "integer", "minimum": 1},
+        "policy_size": {"const": 8},
+        "metadata_class": {"const": "deployment_cohort_metadata"},
+        "immutable_for_formal_run": {"const": true}
+      },
+      "additionalProperties": false
+    },
+    "assignment": {
+      "type": "object",
+      "required": ["algorithm", "domain_separator", "inputs", "task_ground_truth_allowed", "task_text_allowed", "model_output_allowed", "selected_issuer_visibility", "deterministic_within_wallet_epoch"],
+      "properties": {
+        "algorithm": {"const": "sha256_modulo_policy_size_v1"},
+        "domain_separator": {"const": "minmandate/canonical/issuer-assignment/v1"},
+        "inputs": {"const": ["wallet_local_assignment_seed", "epoch_id"]},
+        "task_ground_truth_allowed": {"const": false},
+        "task_text_allowed": {"const": false},
+        "model_output_allowed": {"const": false},
+        "selected_issuer_visibility": {"const": "wallet_local_audit_only"},
+        "deterministic_within_wallet_epoch": {"const": true}
+      },
+      "additionalProperties": false
+    },
+    "routine_view": {"type": "object"},
+    "material": {
+      "type": "object",
+      "required": ["generator", "generator_command", "canonicalization", "canonical_public_policy_b64", "policy_digest_sha256", "generator_binary_sha256", "generator_source_snapshot_sha256", "generated_utc", "admitted_issuers"],
+      "properties": {
+        "generator": {"const": "artifact-rs"},
+        "generator_command": {"type": "string", "minLength": 1},
+        "canonicalization": {"const": "minmandate-ihbbs1-policy-canonical-v1"},
+        "canonical_public_policy_b64": {"type": ["string", "null"]},
+        "policy_digest_sha256": {"type": ["string", "null"], "pattern": "^[0-9a-f]{64}$"},
+        "generator_binary_sha256": {"type": ["string", "null"], "pattern": "^[0-9a-f]{64}$"},
+        "generator_source_snapshot_sha256": {"type": ["string", "null"], "pattern": "^[0-9a-f]{64}$"},
+        "generated_utc": {"type": ["string", "null"]},
+        "admitted_issuers": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["member_slot", "public_key_b64", "public_key_sha256"],
+            "properties": {
+              "member_slot": {"type": "integer", "minimum": 0, "maximum": 7},
+              "public_key_b64": {"type": "string", "minLength": 1},
+              "public_key_sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"}
+            },
+            "additionalProperties": false
+          }
+        }
+      },
+      "additionalProperties": false
+    },
+    "freeze_gate": {"type": "object"}
+  },
+  "allOf": [
+    {
+      "if": {"properties": {"status": {"const": "awaiting_rust_generator"}}, "required": ["status"]},
+      "then": {
+        "properties": {
+          "material": {
+            "properties": {
+              "canonical_public_policy_b64": {"const": null},
+              "policy_digest_sha256": {"const": null},
+              "generator_binary_sha256": {"const": null},
+              "generator_source_snapshot_sha256": {"const": null},
+              "generated_utc": {"const": null},
+              "admitted_issuers": {"maxItems": 0}
+            }
+          }
+        }
+      }
+    },
+    {
+      "if": {"properties": {"status": {"const": "generated_and_frozen"}}, "required": ["status"]},
+      "then": {
+        "properties": {
+          "material": {
+            "properties": {
+              "canonical_public_policy_b64": {"type": "string", "minLength": 1},
+              "policy_digest_sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+              "generator_binary_sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+              "generator_source_snapshot_sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+              "generated_utc": {"type": "string", "minLength": 1},
+              "admitted_issuers": {"minItems": 8, "maxItems": 8}
+            }
+          }
+        }
+      }
+    }
+  ],
+  "additionalProperties": false
+}

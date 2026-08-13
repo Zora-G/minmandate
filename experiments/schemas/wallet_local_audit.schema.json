@@ -1,0 +1,21 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://minmandate.local/schemas/wallet-local-audit-v1.json",
+  "type": "object",
+  "required": ["schema_version", "evidence_scope", "wallet_id", "epoch_id", "policy_digest_sha256", "policy_size", "assignment_algorithm", "key_material_profile", "selected_issuer_index", "selected_issuer_public_key_sha256", "external_view_exported"],
+  "properties": {
+    "schema_version": {"const": "minmandate-wallet-local-audit-v1"},
+    "evidence_scope": {"const": "wallet_local_private_audit"},
+    "wallet_id": {"type": "string", "minLength": 1},
+    "epoch_id": {"const": "canonical-epoch-2026q3-v1"},
+    "policy_digest_sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+    "policy_size": {"const": 8},
+    "assignment_algorithm": {"const": "sha256_modulo_policy_size_v1"},
+    "key_material_profile": {"const": "deterministic-public-test-secrets-non-production"},
+    "selected_issuer_index": {"type": "integer", "minimum": 0, "maximum": 7},
+    "selected_issuer_public_key_sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+    "issuer_identity": {"type": "string", "minLength": 1},
+    "external_view_exported": {"const": false}
+  },
+  "additionalProperties": true
+}

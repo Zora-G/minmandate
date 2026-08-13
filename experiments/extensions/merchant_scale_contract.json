@@ -1,0 +1,89 @@
+{
+  "schema_version": "minmandate-e6-merchant-scale-contract-v1",
+  "experiment_id": "MERCHANT_SCALE_STRESS",
+  "purpose": "Appendix-only normalized synthetic merchant-universe stress test extending the reference independent-unavailability experiment without re-estimating or modifying any reference result.",
+  "write_gates": {
+    "main_text": "read_only_no_exceptions",
+    "technical_supplement": "results_do_not_enter_without_explicit_user_review",
+    "result_policy": "retain_all_completed, adverse, mixed, null, failed, and scope-limiting outcomes",
+    "selection_policy": "no outcome-based filtering, seed removal, metric substitution, or silent reruns"
+  },
+  "required_inputs": [
+    "inputs/merchant_availability/raw/episode_records.jsonl",
+    "inputs/merchant_availability/raw/call_records.jsonl",
+    "inputs/merchant_availability/frozen_inputs/ap2k_config.json",
+    "inputs/merchant_availability/frozen_inputs/merchant_universe.jsonl",
+    "inputs/merchant_availability/frozen_inputs/availability_masks.jsonl"
+  ],
+  "relationship_to_main": {
+    "reference_result": "The reported 32.7 percentage-point comparison remains the frozen AP2-1, p_unavail=0.5, independent-unavailability result.",
+    "extension_label": "normalized synthetic market-size stress test",
+    "forbidden_interpretation": "Do not present E6 as production market evidence, a replacement estimate, or evidence that MinMandate dominates every AP2-k condition.",
+    "adverse_result_action": "Record independently and stop before supplement integration pending explicit user decision."
+  },
+  "design": {
+    "merchant_universe_sizes": [3, 5, 10, 20],
+    "ap2_k_by_universe_size": {
+      "3": [1, 2, 3],
+      "5": [1, 2, 3, 5],
+      "10": [1, 2, 3, 5, 10],
+      "20": [1, 2, 3, 5, 10, 20]
+    },
+    "ap2_20_role": "diagnostic full-coverage disappearance-point anchor",
+    "merchant_unavailability_probabilities": [0.1, 0.25, 0.5, 0.75, 0.9],
+    "planners": ["L8", "Q14", "Q32", "GPT-OSS"],
+    "source_seeds": [11, 22, 33],
+    "base_tasks_per_planner_seed": 96,
+    "statistical_unit": "unique base task; repeated seeds and planners remain within the task cluster",
+    "normalized_universe_rule": "For each frozen task and service class, place its unique frozen source-preferred merchant first, retain the other frozen admitted merchants in approval order, and append deterministic schema-compatible synthetic IDs until the requested exact size is reached.",
+    "synthetic_merchant_scope": "Offline interchangeable merchant identifiers only; no live service, account, payment rail, or claim about real merchant quality.",
+    "availability_rule": "Reuse the frozen u value for every original task-seed-merchant key. Derive only new synthetic-merchant u values with the frozen SHA-256 salt rule. Threshold the same u at every p so masks remain nested and shared across planners and conditions.",
+    "execution_path": "Actual pinned AP2 v0.2 AP2QueryFreeController replay and actual same-source MinMandate policy/Rust replay imported from experiments/scripts/run_coverage_replay.py; pure coverage-only simulation is forbidden.",
+    "physical_shards": 32,
+    "atomic_ap2_cell": ["universe_size", "k", "p_unavail", "planner", "seed"],
+    "atomic_minmandate_cell": ["universe_size", "p_unavail", "planner", "seed"],
+    "shard_assignment": "uint64(SHA256(canonical_cell_id)[0:8]) mod 32",
+    "bootstrap_repetitions": 10000,
+    "bootstrap_seed": 202607316
+  },
+  "expected_cardinality": {
+    "ap2_u_k_pairs": 18,
+    "ap2_atomic_cells": 1080,
+    "minmandate_atomic_cells": 240,
+    "all_atomic_cells": 1320,
+    "ap2_episode_rows": 103680,
+    "minmandate_episode_rows": 23040,
+    "all_episode_rows": 126720
+  },
+  "primary_metrics": [
+    "task_success_rate",
+    "paired_success_difference_minmandate_minus_ap2_k",
+    "coverage_limited_failure_rate",
+    "market_wide_failure_rate"
+  ],
+  "secondary_metrics": [
+    "fallback_success_rate",
+    "task_cluster_bootstrap_95pct_interval",
+    "authorization_entry_count",
+    "authorization_scope_canonical_bytes",
+    "coverage_ratio_k_over_universe_size",
+    "protocol_denial_rate"
+  ],
+  "budget_semantics": "Allowed-merchant enumeration does not multiply the frozen approved spend cap in the reference AP2 baseline. Verify the non-merchant draft hash is invariant; do not fabricate k-times budget inflation.",
+  "merge_gates": [
+    "all_32_physical_shard_manifests_present",
+    "contract_script_input_binary_and_policy_hashes_identical",
+    "atomic_cell_union_exact_and_disjoint",
+    "96_unique_task_episode_rows_per_atomic_cell",
+    "every_ap2_episode_has_one_minmandate_counterpart",
+    "top_k_is_a_ranked_prefix_and_k_does_not_exceed_universe_size",
+    "availability_masks_are_nested_and_shared",
+    "source_trace_quote_and_initial_state_hashes_are_condition_invariant",
+    "merged_primary_keys_are_unique"
+  ],
+  "reporting": {
+    "raw_result_directory": "experiments/extensions/results/MERCHANT_SCALE_STRESS",
+    "logs_directory": "experiments/extensions/logs",
+    "supplement_update_allowed": false
+  }
+}

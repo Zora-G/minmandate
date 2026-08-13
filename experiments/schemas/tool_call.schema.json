@@ -1,0 +1,45 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://minmandate.local/schemas/tool-call-v2.json",
+  "type": "object",
+  "required": [
+    "episode_id", "base_task_id", "call_id", "call_index", "tool_namespace",
+    "tool_name", "canonical_tool_arguments", "merchant_visible_descriptor",
+    "service_class", "merchant_id", "paid", "tool_duration_ms", "tool_success",
+    "middleware_variant", "evidence_type"
+  ],
+  "properties": {
+    "call_index": {"type": "integer", "minimum": 1},
+    "paid": {"type": "boolean"},
+    "tool_duration_ms": {"type": "number", "minimum": 0},
+    "evidence_type": {"enum": ["measured_benchmark"]},
+    "minmandate_contract": {
+      "type": "object",
+      "required": ["scheme", "protocol_version", "wire_version", "issuer_policy_epoch", "issuer_policy_digest_sha256", "issuer_policy_size"],
+      "properties": {
+        "scheme": {"const": "ihbbs1-bbs-bls12381-v1"},
+        "protocol_version": {"const": "minmandate-v3"},
+        "wire_version": {"const": "minmandate-rs-jsonl-v3"},
+        "issuer_policy_epoch": {"const": "canonical-epoch-2026q3-v1"},
+        "issuer_policy_digest_sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+        "issuer_policy_size": {"const": 8}
+      },
+      "not": {
+        "anyOf": [
+          {"required": ["issuer_identity"]},
+          {"required": ["selected_issuer_index"]},
+          {"required": ["selected_issuer_public_key"]},
+          {"required": ["wallet_id"]}
+        ]
+      },
+      "additionalProperties": false
+    }
+  },
+  "allOf": [
+    {
+      "if": {"properties": {"middleware_variant": {"const": "minmandate"}}, "required": ["middleware_variant"]},
+      "then": {"required": ["minmandate_contract"]}
+    }
+  ],
+  "additionalProperties": true
+}

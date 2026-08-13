@@ -1,0 +1,27 @@
+schema_version: minmandate-field-taxonomy-v2
+default:
+  identifier_class: non_identifier
+  required_for_local_verification: true
+  rationale: Payload value with no identifier semantics under the audited role.
+rules:
+  - {protocol: x402_v2, path_regex: '(^|\.)payment_payload\.payload\.authorization\.from$', identifier_class: payer_or_user_cluster_handle, handle_group: payer_address, required_for_local_verification: true, rationale: Payer address visible in the signed authorization.}
+  - {protocol: x402_v2, path_regex: '(^|\.)settlement_response\.payer$', identifier_class: payer_or_user_cluster_handle, handle_group: payer_address, required_for_local_verification: false, rationale: Settlement response repeats the payer address.}
+  - {protocol: x402_v2, path_regex: '^transaction$', identifier_class: one_time_identifier, required_for_local_verification: true, rationale: Per-payment settlement transaction.}
+  - {protocol: x402_v2, path_regex: '^payload\.authorization\.nonce$', identifier_class: one_time_identifier, required_for_local_verification: true, rationale: Per-payment authorization nonce.}
+  - {protocol: x402_v2, path_regex: '^(accepted|accepts\[\d+\])\.(payTo|asset|network)$', identifier_class: merchant_constant, required_for_local_verification: true, rationale: Merchant or network configuration, not a workflow handle.}
+  - {protocol: ap2_v0_2, path_regex: '(^|\.)open_checkout_mandate\.cnf\.kid$', identifier_class: payer_or_user_cluster_handle, handle_group: holder_key_id, required_for_local_verification: true, rationale: Stable holder key binding reused by the local AP2 fixture across one workflow.}
+  - {protocol: ap2_v0_2, path_regex: '(^|\.)(checkout_mandate\.checkout_hash|payment_mandate\.transaction_id)$', identifier_class: workflow_exact_handle, handle_group: checkout_reference, required_for_local_verification: true, rationale: Mandate linkage shared inside one checkout/payment chain.}
+  - {protocol: ap2_v0_2, path_regex: '(^|\.)(checkout_receipt|payment_receipt)\.reference$', identifier_class: workflow_exact_handle, handle_group: checkout_reference, required_for_local_verification: true, rationale: Receipt reference binds back to the mandate chain.}
+  - {protocol: ap2_v0_2, path_regex: '^(checkout_receipt\.order_id|payment_receipt\.(payment_id|psp_confirmation_id|network_confirmation_id))$', identifier_class: one_time_identifier, required_for_local_verification: true, rationale: Per-checkout or per-payment receipt identifier.}
+  - {protocol: ap2_v0_2, path_regex: '^(checkout_receipt|payment_receipt)\.iss$', identifier_class: issuer_cluster_handle, required_for_local_verification: true, rationale: Stable receipt issuer identifier.}
+  - {protocol: one_time, path_regex: '^(token|serial|receipt)$', identifier_class: one_time_identifier, required_for_local_verification: true, rationale: Constructed per-invocation token.}
+  - {protocol: minmandate, path_regex: '(^|\.)serials\.', identifier_class: one_time_identifier, required_for_local_verification: true, rationale: Per-slot serial derived for one spend.}
+  - {protocol: minmandate, path_regex: '(^|\.)funding_tags\.', identifier_class: one_time_identifier, required_for_local_verification: true, rationale: Per-slot one-time funding tag.}
+  - {protocol: minmandate, path_regex: '(^|\.)(bind|I)$', identifier_class: one_time_identifier, required_for_local_verification: true, rationale: One-call transcript binding.}
+  - {protocol: minmandate, path_regex: '(^|\.)(issuer_policy\.)?(epoch_id|policy_digest_sha256|policy_size|policy_config_sha256)$', identifier_class: deployment_cohort_metadata, handle_group: canonical_epoch_policy, required_for_local_verification: true, rationale: Canonical eight-member policy provenance shared by the deployment cohort, not a selected issuer or workflow handle.}
+  - {protocol: minmandate, path_regex: '(^|\.)(randomized_verification_key_b64|randomized_policy_membership_tag_b64)$', identifier_class: one_time_identifier, handle_group: per_call_issuer_evidence, required_for_local_verification: true, rationale: Fresh IHBBS1 key/tag evidence for one invocation.}
+  - {protocol: wallet_local_audit, path_regex: '(^|\.)(issuer_identity|selected_issuer_index|selected_issuer_public_key_sha256)$', identifier_class: issuer_cluster_handle, handle_group: selected_issuer_identity, required_for_local_verification: false, rationale: Selected issuer identity is retained only in private wallet-local audit and is prohibited from routine verifier views.}
+  - {protocol: minmandate, path_regex: '(^|\.)presentation\.', identifier_class: non_identifier, required_for_local_verification: true, rationale: Randomized proof material; bytes alone are not counted as identifiers.}
+  - {protocol: '*', path_regex: '(^|\.)issuer_handle$', identifier_class: issuer_cluster_handle, handle_group: issuer_handle, required_for_local_verification: true, rationale: Stable issuer verification handle deliberately exposed by non-hiding MinMandate ablations.}
+  - {protocol: '*', path_regex: '(^|\.)raw_capability_handle$', identifier_class: workflow_exact_handle, handle_group: raw_capability_handle, required_for_local_verification: false, rationale: Stable raw task-capability handle deliberately exposed by the direct ablation.}
+  - {protocol: '*', path_regex: '(^|\.)(service_input|resource|description|query|arguments)(\.|$)', identifier_class: content_metadata, required_for_local_verification: true, rationale: Merchant-visible application semantics, outside payment-handle count.}

@@ -1,0 +1,1 @@
+"""MinMandate experiment implementation."""

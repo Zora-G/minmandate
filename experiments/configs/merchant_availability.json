@@ -1,0 +1,77 @@
+{
+  "schema_version": "minmandate-merchant-availability-probability-v3-96",
+  "experiment_id": "merchant-availability-probability-v3-96",
+  "planner_run_prefix": "offline-merchant-uncertainty-v2-planner,offline-merchant-uncertainty-v3-96-r5-planner",
+  "source": {
+    "planners": ["l8", "q14", "q32", "gpt_oss"],
+    "conditions": {"ap2": "ap2_native", "minmandate": "minmandate"},
+    "tasks_per_planner": 96,
+    "seeds": [11, 22, 33],
+    "episodes_per_planner_protocol": 288
+  },
+  "offline_user_policy": {
+    "max_reauthorizations": 0,
+    "post_start_user_interactions_allowed": 0,
+    "minmandate_policy_replans_allowed": true,
+    "policy_widening_allowed": false
+  },
+  "primary_table1_condition": {
+    "scenario": "preferred_with_probabilistic_substitution",
+    "ap2_initial_candidate_count": 1,
+    "preferred_merchant_unavailable_probability": 0.25
+  },
+  "scenarios": {
+    "unknown_merchant_at_formation": {
+      "ap2_initial_candidate_count": 0,
+      "preferred_merchant_unavailable_probabilities": [1.0]
+    },
+    "preferred_with_probabilistic_substitution": {
+      "ap2_initial_candidate_count": 1,
+      "preferred_merchant_unavailable_probabilities": [0.0, 0.1, 0.25, 0.5]
+    },
+    "multiple_candidates": {
+      "ap2_initial_candidate_count": 3,
+      "preferred_merchant_unavailable_probabilities": [0.0, 0.1, 0.25, 0.5]
+    }
+  },
+  "availability_assignment": {
+    "unit": "episode_preferred_merchant_in_frozen_paid_trace",
+    "preferred_merchant_source": "pre-intervention merchant identity of each paid call in the frozen trace; unused optional authorization rows create no substitution obligation",
+    "uniform_source": "sha256(base_task_id|seed|preferred_merchant_id|merchant-availability-v3)",
+    "nested_across_probability_grid": true,
+    "threshold_independent_of_task_success_and_authorization_outcome": true,
+    "substitution_required_when_unavailable": true,
+    "zero_paid_call_episode_cannot_pass_by_avoiding_substitution": true
+  },
+  "authorization_semantics": {
+    "ap2": "enumerated Merchant objects in checkout.allowed_merchants and payment.allowed_payees; primary condition enumerates only the initially selected preferred merchant",
+    "minmandate": "merchant-neutral policy:admitted:<service_class> slots; runtime merchant must present a valid taxonomy/admission certificate for the signed service class",
+    "max_reauthorizations": 0
+  },
+  "merchant_catalog": {
+    "calendar": ["calendar-service", "calendar-synthetic-a", "calendar-synthetic-b"],
+    "contacts": ["contacts-service", "contacts-synthetic-a", "contacts-synthetic-b"],
+    "mail": ["mail-service", "mail-synthetic-a", "mail-synthetic-b"],
+    "drive": ["drive-service", "drive-synthetic-a", "drive-synthetic-b"],
+    "travel-car": ["travel-car-service", "travel-car-synthetic-a", "travel-car-synthetic-b"],
+    "travel-flight": ["travel-flight-service", "travel-flight-synthetic-a", "travel-flight-synthetic-b"],
+    "travel-hotel": ["travel-hotel-service", "travel-hotel-synthetic-a", "travel-hotel-synthetic-b"],
+    "travel-restaurant": ["travel-restaurant-service", "travel-restaurant-synthetic-a", "travel-restaurant-synthetic-b"],
+    "travel-profile": ["travel-profile-service", "travel-profile-synthetic-a", "travel-profile-synthetic-b"],
+    "banking": ["banking-service", "banking-synthetic-a", "banking-synthetic-b"],
+    "slack": ["slack-service", "slack-synthetic-a", "slack-synthetic-b"],
+    "web": ["web-service", "web-synthetic-a", "web-synthetic-b"]
+  },
+  "measurement_boundary": {
+    "planner": "fresh measured AgentDojo rerun on small GPU shards",
+    "authorization": "real AP2-v0.2-conformant and Full MinMandate execution",
+    "business_state": "symmetric merchant aliases return the same deterministic service result",
+    "external_payment_requests": 0,
+    "network_transactions": 0,
+    "funds_moved": false
+  },
+  "supersedes": [
+    "experiments/paper_official/merchant_uncertainty/formal_v1",
+    "merchant-uncertainty offline_v2 oracle-candidate-set pilot"
+  ]
+}

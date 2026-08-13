@@ -1,0 +1,8 @@
+cryptography==46.0.5
+httpx==0.28.1
+jwcrypto==1.5.6
+matplotlib==3.10.7
+numpy==2.5.1
+pydantic==2.12.5
+PyYAML==6.0.3
+ap2 @ git+https://github.com/google-agentic-commerce/AP2.git@b4587ac1d055888a73b4b21750973cffba961793

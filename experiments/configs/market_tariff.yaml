@@ -1,0 +1,221 @@
+schema_version: minmandate-market-tariff-v1
+snapshot_date: 2026-07-10
+currency: USD
+integer_unit: nano_usd
+scenario_multipliers_milli:
+  low: 750
+  nominal: 1000
+  peak: 1500
+uniform_price_control_nanos: 10000000
+budget_reserve_nanos: 0
+
+tariffs:
+  m365_operation:
+    pricing_source: https://www.microsoft.com/en-us/microsoft-365/business/microsoft-365-business-basic
+    pricing_unit: normalized SaaS operation
+    formula_kind: fixed
+    base_nanos: 1000000
+    budget_nominal_nanos: 1000000
+    usage_formula: USD 6 user-month / 6,000 declared operations per user-month
+    normalization_rule: Representative market estimate for calendar and directory operations; not a Microsoft per-call tariff.
+  slack_operation:
+    pricing_source: https://slack.com/pricing/pro
+    pricing_unit: normalized SaaS operation
+    formula_kind: fixed
+    base_nanos: 1450000
+    budget_nominal_nanos: 1450000
+    usage_formula: USD 7.25 active-user-month / 5,000 declared operations per active-user-month
+    normalization_rule: Representative market estimate; not a Slack per-call tariff.
+  ses_outbound:
+    pricing_source: https://aws.amazon.com/ses/pricing/
+    pricing_unit: recipient plus outgoing payload
+    formula_kind: recipient_and_payload
+    recipient_nanos: 100000
+    per_gib_nanos: 120000000
+    budget_nominal_nanos: 200000
+    usage_formula: USD 0.10/1,000 recipients + USD 0.12/GiB outgoing data
+    normalization_rule: Public pay-as-you-go tariff; one nominal call budgets two recipients.
+  s3_get:
+    pricing_source: https://aws.amazon.com/s3/pricing/
+    pricing_unit: GET request
+    formula_kind: fixed
+    base_nanos: 400
+    budget_nominal_nanos: 400
+    usage_formula: USD 0.0004/1,000 GET requests
+    normalization_rule: First published request tier; free-tier credits excluded.
+  s3_put:
+    pricing_source: https://aws.amazon.com/s3/pricing/
+    pricing_unit: PUT request plus payload
+    formula_kind: payload_kib
+    base_nanos: 5000
+    unit_nanos: 0
+    argument_fields: [content]
+    budget_nominal_nanos: 5000
+    usage_formula: USD 0.005/1,000 PUT requests; payload recorded but storage rent excluded
+    normalization_rule: First published request tier; free-tier credits excluded.
+  places_text_search:
+    pricing_source: https://developers.google.com/maps/billing-and-pricing/pricing
+    pricing_unit: text-search event
+    formula_kind: fixed
+    base_nanos: 32000000
+    budget_nominal_nanos: 32000000
+    usage_formula: USD 32/1,000 Places Text Search Pro events
+    normalization_rule: First paid volume tier; monthly free cap excluded.
+  places_detail:
+    pricing_source: https://developers.google.com/maps/billing-and-pricing/pricing
+    pricing_unit: place-detail event
+    formula_kind: per_list_item
+    base_nanos: 0
+    unit_nanos: 17000000
+    argument_field: restaurant_names
+    budget_nominal_nanos: 34000000
+    usage_formula: USD 17/1,000 Place Details Pro events per requested entity
+    normalization_rule: Representative detail lookup; nominal budget assumes two entities.
+  places_detail_hotel:
+    pricing_source: https://developers.google.com/maps/billing-and-pricing/pricing
+    pricing_unit: place-detail event
+    formula_kind: per_list_item
+    base_nanos: 0
+    unit_nanos: 17000000
+    argument_field: hotel_names
+    budget_nominal_nanos: 34000000
+    usage_formula: USD 17/1,000 Place Details Pro events per requested entity
+    normalization_rule: Representative detail lookup; nominal budget assumes two entities.
+  places_detail_car:
+    pricing_source: https://developers.google.com/maps/billing-and-pricing/pricing
+    pricing_unit: place-detail event
+    formula_kind: per_list_item
+    base_nanos: 0
+    unit_nanos: 17000000
+    argument_field: company_name
+    budget_nominal_nanos: 34000000
+    usage_formula: USD 17/1,000 Place Details Pro events per requested entity
+    normalization_rule: Representative detail lookup; nominal budget assumes two entities.
+  browser_session:
+    pricing_source: https://www.browserless.io/pricing
+    pricing_unit: 30-second browser unit
+    formula_kind: fixed
+    base_nanos: 2000000
+    budget_nominal_nanos: 2000000
+    usage_formula: one 30-second unit at USD 0.002 overage price
+    normalization_rule: Market analogue for one web-backed action; no proxy or CAPTCHA units.
+  browser_transaction:
+    pricing_source: https://www.browserless.io/pricing
+    pricing_unit: two 30-second browser units
+    formula_kind: fixed
+    base_nanos: 4000000
+    budget_nominal_nanos: 4000000
+    usage_formula: two 30-second units at USD 0.002 per unit
+    normalization_rule: Representative booking-action estimate; not a vendor booking fee.
+  financial_balance:
+    pricing_source: https://stripe.com/financial-connections
+    pricing_unit: successful balance API call
+    formula_kind: fixed
+    base_nanos: 100000000
+    budget_nominal_nanos: 100000000
+    usage_formula: USD 0.10 per successful balance call
+    normalization_rule: Public Financial Connections tariff.
+  financial_owner:
+    pricing_source: https://stripe.com/financial-connections
+    pricing_unit: successful owner/account call
+    formula_kind: fixed
+    base_nanos: 1500000000
+    budget_nominal_nanos: 1500000000
+    usage_formula: USD 1.50 per successful account-owner call
+    normalization_rule: Public Financial Connections tariff used for identity/account retrieval.
+  financial_history:
+    pricing_source: https://stripe.com/financial-connections
+    pricing_unit: transaction-history access
+    formula_kind: fixed
+    base_nanos: 300000000
+    budget_nominal_nanos: 300000000
+    usage_formula: USD 0.30 transaction-data tariff normalized to one benchmark access
+    normalization_rule: Representative call estimate from an account-holder-month tariff; not exact per-call vendor pricing.
+  payout:
+    pricing_source: https://stripe.com/connect/pricing
+    pricing_unit: payout
+    formula_kind: fixed_plus_bps
+    base_nanos: 250000000
+    argument_field: amount
+    basis_points: 25
+    budget_nominal_nanos: 500000000
+    usage_formula: USD 0.25 + 0.25% of payout amount
+    normalization_rule: Public Connect payout tariff; nominal budget assumes USD 100 business amount.
+
+tool_mappings:
+  workspace:
+    add_calendar_event_participants: m365_operation
+    cancel_calendar_event: m365_operation
+    create_calendar_event: m365_operation
+    get_day_calendar_events: m365_operation
+    reschedule_calendar_event: m365_operation
+    search_calendar_events: m365_operation
+    delete_email: m365_operation
+    get_draft_emails: m365_operation
+    get_received_emails: m365_operation
+    get_sent_emails: m365_operation
+    get_unread_emails: m365_operation
+    search_emails: m365_operation
+    send_email: ses_outbound
+    append_to_file: s3_put
+    create_file: s3_put
+    delete_file: s3_put
+    get_file_by_id: s3_get
+    list_files: s3_get
+    search_files: s3_get
+    search_files_by_filename: s3_get
+    share_file: s3_put
+    search_contacts_by_email: m365_operation
+    search_contacts_by_name: m365_operation
+  travel:
+    cancel_calendar_event: m365_operation
+    create_calendar_event: m365_operation
+    get_day_calendar_events: m365_operation
+    search_calendar_events: m365_operation
+    send_email: ses_outbound
+    check_restaurant_opening_hours: places_detail
+    get_all_restaurants_in_city: places_text_search
+    get_contact_information_for_restaurants: places_detail
+    get_cuisine_type_for_restaurants: places_detail
+    get_dietary_restrictions_for_all_restaurants: places_detail
+    get_price_for_restaurants: places_detail
+    get_rating_reviews_for_restaurants: places_detail
+    get_restaurants_address: places_detail
+    reserve_restaurant: browser_transaction
+    get_all_car_rental_companies_in_city: places_text_search
+    get_car_fuel_options: places_detail_car
+    get_car_price_per_day: places_detail_car
+    get_car_rental_address: places_detail_car
+    get_car_types_available: places_detail_car
+    get_rating_reviews_for_car_rental: places_detail_car
+    reserve_car_rental: browser_transaction
+    get_all_hotels_in_city: places_text_search
+    get_hotels_address: places_detail_hotel
+    get_hotels_prices: places_detail_hotel
+    get_rating_reviews_for_hotels: places_detail_hotel
+    reserve_hotel: browser_transaction
+    get_flight_information: places_text_search
+    get_user_information: financial_owner
+  banking:
+    get_balance: financial_balance
+    get_iban: financial_owner
+    get_most_recent_transactions: financial_history
+    get_scheduled_transactions: financial_history
+    get_user_info: financial_owner
+    schedule_transaction: payout
+    send_money: payout
+    update_password: financial_owner
+    update_scheduled_transaction: payout
+    update_user_info: financial_owner
+  slack:
+    add_user_to_channel: slack_operation
+    get_channels: slack_operation
+    get_users_in_channel: slack_operation
+    invite_user_to_slack: slack_operation
+    read_channel_messages: slack_operation
+    read_inbox: slack_operation
+    remove_user_from_slack: slack_operation
+    send_channel_message: slack_operation
+    send_direct_message: slack_operation
+    get_webpage: browser_session
+    post_webpage: browser_session

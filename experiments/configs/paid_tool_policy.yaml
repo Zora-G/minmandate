@@ -1,0 +1,88 @@
+schema_version: minmandate-paid-tool-policy-v2
+authorization:
+  external_tools_require_task_contract: true
+  exempt_merchants: [local-runtime]
+billing:
+  read_only_queries_consume_budget: false
+  state_changing_tools_consume_budget: true
+agentdojo_version: 0.1.35
+task_suite_version: v1.2.2
+tools:
+  workspace:
+    get_current_day: {paid: false, merchant_id: local-runtime, service_class: local, rationale: Local date helper.}
+    add_calendar_event_participants: {paid: true, merchant_id: calendar-service, service_class: calendar, rationale: External calendar mutation.}
+    cancel_calendar_event: {paid: true, merchant_id: calendar-service, service_class: calendar, rationale: External calendar mutation.}
+    create_calendar_event: {paid: true, merchant_id: calendar-service, service_class: calendar, rationale: External calendar mutation.}
+    get_day_calendar_events: {paid: false, merchant_id: calendar-service, service_class: calendar, rationale: Authorized external calendar query; zero budget.}
+    reschedule_calendar_event: {paid: true, merchant_id: calendar-service, service_class: calendar, rationale: External calendar mutation.}
+    search_calendar_events: {paid: false, merchant_id: calendar-service, service_class: calendar, rationale: Authorized external calendar query; zero budget.}
+    delete_email: {paid: true, merchant_id: mail-service, service_class: communication, rationale: External mail mutation.}
+    get_draft_emails: {paid: false, merchant_id: mail-service, service_class: communication, rationale: Authorized external mail query; zero budget.}
+    get_received_emails: {paid: false, merchant_id: mail-service, service_class: communication, rationale: Authorized external mail query; zero budget.}
+    get_sent_emails: {paid: false, merchant_id: mail-service, service_class: communication, rationale: Authorized external mail query; zero budget.}
+    get_unread_emails: {paid: false, merchant_id: mail-service, service_class: communication, rationale: Authorized external mail query; zero budget.}
+    search_emails: {paid: false, merchant_id: mail-service, service_class: communication, rationale: Authorized external mail query; zero budget.}
+    send_email: {paid: true, merchant_id: mail-service, service_class: communication, rationale: External mail mutation.}
+    append_to_file: {paid: true, merchant_id: drive-service, service_class: storage, rationale: External drive mutation.}
+    create_file: {paid: true, merchant_id: drive-service, service_class: storage, rationale: External drive mutation.}
+    delete_file: {paid: true, merchant_id: drive-service, service_class: storage, rationale: External drive mutation.}
+    get_file_by_id: {paid: false, merchant_id: drive-service, service_class: storage, rationale: Authorized external drive query; zero budget.}
+    list_files: {paid: false, merchant_id: drive-service, service_class: storage, rationale: Authorized external drive query; zero budget.}
+    search_files: {paid: false, merchant_id: drive-service, service_class: storage, rationale: Authorized external drive query; zero budget.}
+    search_files_by_filename: {paid: false, merchant_id: drive-service, service_class: storage, rationale: Authorized external drive query; zero budget.}
+    share_file: {paid: true, merchant_id: drive-service, service_class: storage, rationale: External drive mutation.}
+    search_contacts_by_email: {paid: false, merchant_id: contacts-service, service_class: identity-directory, rationale: Authorized external contact query; zero budget.}
+    search_contacts_by_name: {paid: false, merchant_id: contacts-service, service_class: identity-directory, rationale: Authorized external contact query; zero budget.}
+  travel:
+    cancel_calendar_event: {paid: true, merchant_id: calendar-service, service_class: calendar, rationale: External calendar mutation.}
+    create_calendar_event: {paid: true, merchant_id: calendar-service, service_class: calendar, rationale: External calendar mutation.}
+    get_day_calendar_events: {paid: false, merchant_id: calendar-service, service_class: calendar, rationale: Authorized external calendar query; zero budget.}
+    search_calendar_events: {paid: false, merchant_id: calendar-service, service_class: calendar, rationale: Authorized external calendar query; zero budget.}
+    send_email: {paid: true, merchant_id: mail-service, service_class: communication, rationale: External mail mutation.}
+    check_restaurant_opening_hours: {paid: false, merchant_id: travel-restaurant-service, service_class: travel, rationale: Authorized external restaurant query; zero budget.}
+    get_all_restaurants_in_city: {paid: false, merchant_id: travel-restaurant-service, service_class: travel, rationale: Authorized external restaurant query; zero budget.}
+    get_contact_information_for_restaurants: {paid: false, merchant_id: travel-restaurant-service, service_class: travel, rationale: Authorized external restaurant query; zero budget.}
+    get_cuisine_type_for_restaurants: {paid: false, merchant_id: travel-restaurant-service, service_class: travel, rationale: Authorized external restaurant query; zero budget.}
+    get_dietary_restrictions_for_all_restaurants: {paid: false, merchant_id: travel-restaurant-service, service_class: travel, rationale: Authorized external restaurant query; zero budget.}
+    get_price_for_restaurants: {paid: false, merchant_id: travel-restaurant-service, service_class: travel, rationale: Authorized external restaurant query; zero budget.}
+    get_rating_reviews_for_restaurants: {paid: false, merchant_id: travel-restaurant-service, service_class: travel, rationale: Authorized external restaurant query; zero budget.}
+    get_restaurants_address: {paid: false, merchant_id: travel-restaurant-service, service_class: travel, rationale: Authorized external restaurant query; zero budget.}
+    reserve_restaurant: {paid: true, merchant_id: travel-restaurant-service, service_class: travel, rationale: External restaurant booking.}
+    get_all_car_rental_companies_in_city: {paid: false, merchant_id: travel-car-service, service_class: travel, rationale: Authorized external car-rental query; zero budget.}
+    get_car_fuel_options: {paid: false, merchant_id: travel-car-service, service_class: travel, rationale: Authorized external car-rental query; zero budget.}
+    get_car_price_per_day: {paid: false, merchant_id: travel-car-service, service_class: travel, rationale: Authorized external car-rental query; zero budget.}
+    get_car_rental_address: {paid: false, merchant_id: travel-car-service, service_class: travel, rationale: Authorized external car-rental query; zero budget.}
+    get_car_types_available: {paid: false, merchant_id: travel-car-service, service_class: travel, rationale: Authorized external car-rental query; zero budget.}
+    get_rating_reviews_for_car_rental: {paid: false, merchant_id: travel-car-service, service_class: travel, rationale: Authorized external car-rental query; zero budget.}
+    reserve_car_rental: {paid: true, merchant_id: travel-car-service, service_class: travel, rationale: External car-rental booking.}
+    get_all_hotels_in_city: {paid: false, merchant_id: travel-hotel-service, service_class: travel, rationale: Authorized external hotel query; zero budget.}
+    get_hotels_address: {paid: false, merchant_id: travel-hotel-service, service_class: travel, rationale: Authorized external hotel query; zero budget.}
+    get_hotels_prices: {paid: false, merchant_id: travel-hotel-service, service_class: travel, rationale: Authorized external hotel query; zero budget.}
+    get_rating_reviews_for_hotels: {paid: false, merchant_id: travel-hotel-service, service_class: travel, rationale: Authorized external hotel query; zero budget.}
+    reserve_hotel: {paid: true, merchant_id: travel-hotel-service, service_class: travel, rationale: External hotel booking.}
+    get_flight_information: {paid: false, merchant_id: travel-flight-service, service_class: travel, rationale: Authorized external flight query; zero budget.}
+    get_user_information: {paid: false, merchant_id: travel-profile-service, service_class: identity-directory, rationale: Authorized external travel profile query; zero budget.}
+  banking:
+    read_file: {paid: false, merchant_id: local-runtime, service_class: local, rationale: Local fixture read.}
+    get_balance: {paid: false, merchant_id: banking-service, service_class: finance, rationale: Authorized external banking query; zero budget.}
+    get_iban: {paid: false, merchant_id: banking-service, service_class: finance, rationale: Authorized external banking query; zero budget.}
+    get_most_recent_transactions: {paid: false, merchant_id: banking-service, service_class: finance, rationale: Authorized external banking query; zero budget.}
+    get_scheduled_transactions: {paid: false, merchant_id: banking-service, service_class: finance, rationale: Authorized external banking query; zero budget.}
+    get_user_info: {paid: false, merchant_id: banking-service, service_class: finance, rationale: Authorized external banking query; zero budget.}
+    schedule_transaction: {paid: true, merchant_id: banking-service, service_class: finance, rationale: External banking mutation.}
+    send_money: {paid: true, merchant_id: banking-service, service_class: finance, rationale: External banking mutation.}
+    update_password: {paid: true, merchant_id: banking-service, service_class: finance, rationale: External banking mutation.}
+    update_scheduled_transaction: {paid: true, merchant_id: banking-service, service_class: finance, rationale: External banking mutation.}
+    update_user_info: {paid: true, merchant_id: banking-service, service_class: finance, rationale: External banking mutation.}
+  slack:
+    add_user_to_channel: {paid: true, merchant_id: slack-service, service_class: communication, rationale: External Slack mutation.}
+    get_channels: {paid: false, merchant_id: slack-service, service_class: communication, rationale: Authorized external Slack query; zero budget.}
+    get_users_in_channel: {paid: false, merchant_id: slack-service, service_class: communication, rationale: Authorized external Slack query; zero budget.}
+    invite_user_to_slack: {paid: true, merchant_id: slack-service, service_class: communication, rationale: External Slack mutation.}
+    read_channel_messages: {paid: false, merchant_id: slack-service, service_class: communication, rationale: Authorized external Slack query; zero budget.}
+    read_inbox: {paid: false, merchant_id: slack-service, service_class: communication, rationale: Authorized external Slack query; zero budget.}
+    remove_user_from_slack: {paid: true, merchant_id: slack-service, service_class: communication, rationale: External Slack mutation.}
+    send_channel_message: {paid: true, merchant_id: slack-service, service_class: communication, rationale: External Slack mutation.}
+    send_direct_message: {paid: true, merchant_id: slack-service, service_class: communication, rationale: External Slack mutation.}
+    get_webpage: {paid: false, merchant_id: web-service, service_class: web, rationale: Authorized external web query; zero budget.}
+    post_webpage: {paid: true, merchant_id: web-service, service_class: web, rationale: External web mutation.}

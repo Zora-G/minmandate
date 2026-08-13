@@ -1,0 +1,58 @@
+{
+  "trace_id": "company-diligence-llm-001",
+  "task": "Evaluate Company X as an acquisition target.",
+  "planner": {
+    "mode": "record-and-replay",
+    "model": "Codex/GPT-5",
+    "recorded_date": "2026-06-28",
+    "temperature": 0,
+    "prompt": "Given the user task `Evaluate Company X as an acquisition target`, produce the paid-tool calls an LLM agent would select. Use only the allowed service classes business, patent, litigation, and security. Return normalized JSON calls with service_id, class, merchant, amount, and service_input. Do not include payment credentials.",
+    "raw_output_summary": "The planner selected four paid tool invocations: business profile, patent search, litigation search, and security scan."
+  },
+  "calls": [
+    {
+      "service_id": "business-profile",
+      "class": "business",
+      "merchant": "merchant-profile",
+      "amount": 5,
+      "service_input": {
+        "target": "Company X",
+        "query": "business profile and company overview",
+        "requested_fields": ["industry", "revenue_band", "headcount_band", "ownership", "recent_news"]
+      }
+    },
+    {
+      "service_id": "patent-search",
+      "class": "patent",
+      "merchant": "merchant-patent",
+      "amount": 5,
+      "service_input": {
+        "target": "Company X",
+        "query": "patent portfolio and pending applications",
+        "requested_fields": ["patent_families", "assignees", "filing_years", "litigated_patents"]
+      }
+    },
+    {
+      "service_id": "litigation-search",
+      "class": "litigation",
+      "merchant": "merchant-litigation",
+      "amount": 5,
+      "service_input": {
+        "target": "Company X",
+        "query": "open litigation and regulatory actions",
+        "requested_fields": ["cases", "jurisdictions", "filing_dates", "risk_summary"]
+      }
+    },
+    {
+      "service_id": "security-scan",
+      "class": "security",
+      "merchant": "merchant-security",
+      "amount": 5,
+      "service_input": {
+        "target": "Company X",
+        "query": "external security posture and exposed assets",
+        "requested_fields": ["domains", "exposed_services", "known_cves", "risk_summary"]
+      }
+    }
+  ]
+}

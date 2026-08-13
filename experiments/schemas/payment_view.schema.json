@@ -1,0 +1,76 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://minmandate.local/schemas/payment-view-v2.json",
+  "type": "object",
+  "required": [
+    "workflow_id", "base_task_id", "call_id", "protocol", "protocol_version",
+    "role", "coalition", "serialized_view", "canonical_view_sha256", "wire_bytes",
+    "schema_valid", "trace_context_sha256", "evidence_type"
+  ],
+  "properties": {
+    "protocol": {"enum": ["x402_v2", "ap2_v0_2", "one_time", "minmandate"]},
+    "serialized_view": {"type": "object"},
+    "scheme": {"type": "string"},
+    "wire_schema_version": {"type": "string"},
+    "wire_bytes": {"type": "integer", "minimum": 1},
+    "schema_valid": {"type": "boolean"},
+    "evidence_type": {"enum": ["measured_benchmark", "protocol_fixture"]}
+  },
+  "allOf": [
+    {
+      "if": {"properties": {"protocol": {"const": "minmandate"}}, "required": ["protocol"]},
+      "then": {
+        "required": ["scheme", "wire_schema_version"],
+        "properties": {
+          "protocol_version": {"const": "minmandate-v3"},
+          "scheme": {"const": "ihbbs1-bbs-bls12381-v1"},
+          "wire_schema_version": {"const": "minmandate-rs-jsonl-v3"},
+          "serialized_view": {
+            "type": "object",
+            "required": ["issuer_policy", "issuer_hiding_evidence"],
+            "properties": {
+              "issuer_policy": {"$ref": "#/$defs/publicPolicyMetadata"},
+              "issuer_hiding_evidence": {"$ref": "#/$defs/perCallIssuerEvidence"}
+            },
+            "not": {
+              "anyOf": [
+                {"required": ["issuer_identity"]},
+                {"required": ["issuer_name"]},
+                {"required": ["selected_issuer_index"]},
+                {"required": ["selected_issuer_public_key"]},
+                {"required": ["epoch_pk"]},
+                {"required": ["wallet_id"]},
+                {"required": ["wallet_local_audit"]}
+              ]
+            }
+          }
+        }
+      }
+    }
+  ],
+  "$defs": {
+    "publicPolicyMetadata": {
+      "type": "object",
+      "required": ["epoch_id", "policy_digest_sha256", "policy_size", "policy_config_sha256", "metadata_class"],
+      "properties": {
+        "epoch_id": {"const": "canonical-epoch-2026q3-v1"},
+        "policy_digest_sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+        "policy_size": {"const": 8},
+        "policy_config_sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+        "metadata_class": {"const": "deployment_cohort_metadata"}
+      },
+      "additionalProperties": false
+    },
+    "perCallIssuerEvidence": {
+      "type": "object",
+      "required": ["randomized_verification_key_b64", "randomized_policy_membership_tag_b64", "evidence_scope"],
+      "properties": {
+        "randomized_verification_key_b64": {"type": "string", "minLength": 1},
+        "randomized_policy_membership_tag_b64": {"type": "string", "minLength": 1},
+        "evidence_scope": {"const": "per_call"}
+      },
+      "additionalProperties": false
+    }
+  },
+  "additionalProperties": true
+}

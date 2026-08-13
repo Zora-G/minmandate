@@ -1,0 +1,22 @@
+cff-version: 1.2.0
+message: "If you use this software, please cite the MinMandate manuscript."
+title: "MinMandate: Private Task-Scoped Payment Authorization for Adaptive Agent Workflows"
+type: software
+authors:
+  - family-names: Gao
+    given-names: Ge
+  - family-names: Yu
+    given-names: Haining
+  - family-names: Liu
+    given-names: Zhichao
+  - family-names: Zhan
+    given-names: Dongyang
+  - family-names: Zhu
+    given-names: Yuanxiao
+  - family-names: Hua
+    given-names: Zhongyun
+version: 0.1.0
+date-released: 2026-08-13
+repository-code: "https://github.com/Zora-G/MinMandate"
+license: "LicenseRef-Proprietary"
+
