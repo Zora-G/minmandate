@@ -6,7 +6,7 @@
 
 [TL;DR](#tldr) • [Overview](#overview) • [Code Map](#code-map) • [Setup](#setup) • [Run Experiments](#run-experiments) • [Citation](#citation)
 
-[[Paper](./paper/minmandate_preprint.pdf)]
+[[PDF](./paper/minmandate_preprint.pdf)]
 
 ![Python 3.12](https://img.shields.io/badge/python-3.12-blue)
 ![Rust 1.96](https://img.shields.io/badge/rust-1.96-orange)
