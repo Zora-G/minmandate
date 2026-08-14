@@ -6,7 +6,7 @@
 
 [TL;DR](#tldr) • [Overview](#overview) • [Code Map](#code-map) • [Setup](#setup) • [Run Experiments](#run-experiments) • [Citation](#citation)
 
-[[Paper](./paper/minmandate_preprint.pdf)] [[Source](./paper/minmandate_preprint.tex)]
+[[Paper](./paper/minmandate_preprint.pdf)]
 
 ![Python 3.12](https://img.shields.io/badge/python-3.12-blue)
 ![Rust 1.96](https://img.shields.io/badge/rust-1.96-orange)
@@ -53,7 +53,7 @@ MinMandate combines two mechanisms:
 
 <p align="center"><em>Canonical protocol objects: the user-approved authority is transformed into verifier-specific service and redemption views linked only by a fresh per-call binding.</em></p>
 
-The repository contains the implementation and experiment code used for the paper, together with a self-contained preprint source package.
+The repository contains the implementation and experiment code used for the paper, together with the compiled public preprint.
 
 <a id="code-map"></a>
 ## 🗺️ Code Map
@@ -65,7 +65,7 @@ The repository contains the implementation and experiment code used for the pape
 | [`experiments/extensions/`](./experiments/extensions/) | Merchant-scale and protocol-scaling appendix experiments. |
 | [`ap2_baseline/`](./ap2_baseline/) | Minimal AP2 baseline implementation used by the matched evaluations. |
 | [`rust_protocol/`](./rust_protocol/) | Rust implementation used by the cryptographic protocol and scaling measurements. |
-| [`paper/`](./paper/) | Self-contained LaTeX source, bibliography, figures, and compiled preprint. |
+| [`paper/`](./paper/) | Compiled public preprint PDF. |
 | [`materials/`](./materials/) | Figures used in this README. |
 
 ### Result-to-code map
