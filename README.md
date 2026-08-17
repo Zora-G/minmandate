@@ -1,12 +1,10 @@
 <div align="center">
 
-# 💳 MinMandate
-
-**Private Task-Scoped Payment Authorization for Adaptive Agent Workflows**
+# 💳 [MinMandate: Private Task-Scoped Payment Authorization for Adaptive Agent Workflows](https://eprint.iacr.org/2026/1674)
 
 [TL;DR](#tldr) • [Overview](#overview) • [Code Map](#code-map) • [Setup](#setup) • [Run Experiments](#run-experiments) • [Citation](#citation)
 
-[[PDF](./paper/minmandate_preprint.pdf)]
+[[Paper](https://eprint.iacr.org/2026/1674)] [[PDF](./paper/minmandate_preprint.pdf)]
 
 ![Python 3.12](https://img.shields.io/badge/python-3.12-blue)
 ![Rust 1.96](https://img.shields.io/badge/rust-1.96-orange)
