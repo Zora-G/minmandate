@@ -172,4 +172,4 @@ If you use this code, please cite the MinMandate manuscript. GitHub can also rea
 <a id="license"></a>
 ## 📄 License
 
-This repository is currently shared for private research collaboration. A public-release license will be added before the repository is made public. Third-party dependencies retain their own licenses.
+This repository is a public research snapshot accompanying the ePrint preprint. The source is provided under the proprietary terms recorded in `CITATION.cff`; no broad open-source license is granted. Third-party dependencies retain their own licenses.
