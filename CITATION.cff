@@ -17,6 +17,6 @@ authors:
     given-names: Zhongyun
 version: 0.1.0
 date-released: 2026-08-13
+url: "https://eprint.iacr.org/2026/1674"
 repository-code: "https://github.com/Zora-G/MinMandate"
 license: "LicenseRef-Proprietary"
-

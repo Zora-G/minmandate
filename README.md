@@ -51,7 +51,7 @@ MinMandate combines two mechanisms:
 
 <p align="center"><em>Canonical protocol objects: the user-approved authority is transformed into verifier-specific service and redemption views linked only by a fresh per-call binding.</em></p>
 
-The repository contains the implementation and experiment code used for the paper, together with the compiled public preprint.
+The repository contains the implementation and experiment code used for the manuscript, together with the compiled ePrint preprint.
 
 <a id="code-map"></a>
 ## 🗺️ Code Map
@@ -164,7 +164,8 @@ If you use this code, please cite the MinMandate manuscript. GitHub can also rea
   title  = {MinMandate: Private Task-Scoped Payment Authorization for Adaptive Agent Workflows},
   author = {Gao, Ge and Yu, Haining and Liu, Zhichao and Zhan, Dongyang and Zhu, Yuanxiao and Hua, Zhongyun},
   year   = {2026},
-  note   = {Manuscript}
+  howpublished = {Cryptology ePrint Archive, Report 2026/1674},
+  url    = {https://eprint.iacr.org/2026/1674}
 }
 ```
 
